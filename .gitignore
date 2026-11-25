@@ -1,0 +1,15 @@
+# make.fun kit (downloaded fresh, not part of the entry)
+news-image-20261125-kit/
+news25-kit.tar.gz
+*.tar.gz
+
+# build intermediates
+__pycache__/
+out/
+*.jsonl
+*.log
+preview*.png
+venv-map/
+data/
+illos/
+map_panel.png
