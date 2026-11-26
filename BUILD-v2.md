@@ -5,6 +5,8 @@ commit `43b26a8`, skor **96,02%**, rank **4.495/9.291**. v2 dibangun oleh Builde
 (Hire #2) dari `analysis-v2.md` (analis pesaing, 26 Nov ~16:30 WIB) + skill baru
 huashu-design (31.015★) dan market-news-analyst (8.509★).
 
+**Commit v2: `a674d6edd6666c18c8993d36b6cccb5ca74078a1`** (main, sudah push).
+
 ## Perubahan v2 vs v1 (P0-1 s.d. P0-10 — semua dikerjakan)
 1. **Bar hitam hero (P0-1):** `illo_crop` ditulis ulang jadi cover-crop yang
    tidak pernah keluar batas (crop horizontal bila slot lebih sempit dari 4:1,
