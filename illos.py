@@ -35,12 +35,15 @@ SKY = "#DCE9F5"
 STEEL = "#8FA8BF"
 
 
-def svg(body, bg):
+def svg(body, bg, s=1.3):
+    # v2: scale the scene ~1.3x about its centre so the subject fills the
+    # frame (v1 subjects were small in a sea of empty sky). Background stays
+    # full-bleed; edge elements may crop slightly, which is fine.
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="480" height="120" '
         f'viewBox="0 0 480 120">'
         f'<rect x="0" y="0" width="480" height="120" fill="{bg}"/>'
-        f"{body}</svg>"
+        f'<g transform="translate(240 60) scale({s}) translate(-240 -60)">{body}</g></svg>'
     )
 
 
@@ -428,9 +431,100 @@ def m13_chart():
     return svg("".join(b), "#F4EFE6")
 
 
+# ---------------------------------------------------------------- H2-US data (v2 Hero 1)
+def h2us_data():
+    b = []
+    # giant bars: Q2 2.2 -> advance 3.4 -> second estimate 4.3
+    b.append(rect(96, 84, 52, 26, MINT))
+    b.append(rect(168, 66, 52, 44, LAV))
+    b.append(rect(240, 34, 52, 76, YEL))
+    b.append(rect(312, 8, 52, 102, CORAL))
+    for x in (96, 168, 240, 312):
+        b.append(f'<line x1="{x+7}" y1="104" x2="{x+45}" y2="104" stroke="{WHITE}" stroke-width="1.6" stroke-linecap="round"/>')
+    # arrow up
+    b.append(f'<line x1="104" y1="72" x2="340" y2="8" stroke="{NAVY}" stroke-width="5" stroke-linecap="round"/>')
+    b.append(poly([(340, 2), (370, 8), (344, 24)], NAVY))
+    # Fed-style building, right (kept inside the frame after the 1.15x zoom)
+    b.append(poly([(380, 78), (410, 54), (440, 78)], WHITE))
+    b.append(rect(386, 78, 48, 8, WHITE))
+    for cx in (390, 404, 418, 432):
+        b.append(rect(cx, 80, 6, 22, WHITE))
+    b.append(rect(382, 102, 56, 8, NAVY))
+    # coins
+    b.append(circ(56, 92, 14, YEL))
+    b.append(circ(56, 92, 9, "none"))
+    b.append(circ(80, 100, 10, YEL))
+    return svg("".join(b), NAVY, s=1.15)
+
+
+# ---------------------------------------------------------------- M14 Cairo tanker fire (v2)
+def m14_cairo():
+    b = []
+    b.append(stars(8))
+    # highway
+    b.append(f'<rect x="0" y="86" width="480" height="34" fill="#3A3A3A"/>')
+    b.append(f'<line x1="0" y1="103" x2="480" y2="103" stroke="{YEL}" stroke-width="2" stroke-dasharray="14 10"/>')
+    # big tanker, centre-left
+    b.append(rect(120, 52, 190, 30, CORAL))
+    b.append(rect(120, 52, 190, 7, RED))
+    b.append(circ(150, 67, 12, WHITE))
+    b.append(circ(150, 67, 7, NAVY))
+    b.append(rect(310, 40, 34, 42, WHITE))
+    b.append(rect(316, 46, 10, 8, NAVY))
+    b.append(circ(140, 86, 9, INK))
+    b.append(circ(290, 86, 9, INK))
+    b.append(circ(326, 86, 9, INK))
+    # flames over tanker
+    for fx, fh, col in ((150, 44, "#FF8A00"), (180, 56, RED), (215, 48, "#FF8A00"),
+                        (250, 58, RED), (285, 44, "#FF8A00")):
+        b.append(poly([(fx - 15, 56), (fx, 56 - fh), (fx + 15, 56)], col))
+        b.append(poly([(fx - 6, 56), (fx, 56 - fh + 18), (fx + 6, 56)], YEL))
+    # smoke
+    b.append(circ(180, 14, 13, PLAV))
+    b.append(circ(210, 8, 10, PLAV2))
+    b.append(circ(240, 16, 11, PLAV))
+    # cars caught in fire, right
+    b.append(rect(380, 66, 56, 16, NAVY, 4))
+    b.append(rect(388, 58, 30, 10, SKY, 3))
+    b.append(circ(394, 84, 6, INK))
+    b.append(circ(424, 84, 6, INK))
+    b.append(poly([(400, 66), (406, 50), (412, 66)], YEL))
+    b.append(poly([(404, 66), (406, 56), (408, 66)], "#FF8A00"))
+    return svg("".join(b), "#101736")
+
+
+# ---------------------------------------------------------------- M15 Sandringham break-in (v2)
+def m15_sandringham():
+    b = []
+    # moon + night sky
+    b.append(circ(420, 24, 15, YEL))
+    b.append(stars(10))
+    # big country house, centre
+    b.append(rect(140, 44, 200, 62, "#8A4B2E"))
+    b.append(poly([(130, 46), (240, 14), (350, 46)], "#5C2E1A"))
+    b.append(rect(140, 44, 200, 4, "#5C2E1A"))
+    for wx in (156, 196, 236, 276, 312):
+        b.append(rect(wx, 56, 18, 22, YEL))
+        b.append(f'<line x1="{wx+9}" y1="56" x2="{wx+9}" y2="78" stroke="#5C2E1A" stroke-width="1.5"/>')
+    b.append(rect(228, 78, 24, 28, NAVY))
+    b.append(circ(248, 92, 2, YEL))
+    # drainpipe on the side + scuff marks
+    b.append(rect(336, 20, 6, 86, STEEL))
+    b.append(f'<line x1="330" y1="34" x2="342" y2="40" stroke="{WHITE}" stroke-width="1.6"/>')
+    b.append(f'<line x1="330" y1="46" x2="342" y2="52" stroke="{WHITE}" stroke-width="1.6"/>')
+    # police tape
+    b.append(f'<rect x="0" y="106" width="480" height="10" fill="{YEL}"/>')
+    b.append(f'<line x1="0" y1="106" x2="480" y2="116" stroke="{NAVY}" stroke-width="1.2"/>')
+    # trees
+    b.append(poly([(60, 106), (84, 60), (108, 106)], "#2E5B3E"))
+    b.append(poly([(380, 106), (404, 66), (428, 106)], "#2E5B3E"))
+    return svg("".join(b), "#1B2A4A")
+
+
 SCENES = {
     "h1": h1_shenzhou,
     "h2": h2_cpi,
+    "h2us": h2us_data,
     "h3": h3_treaty,
     "m4": m4_tower,
     "m5": m5_court,
@@ -442,6 +536,8 @@ SCENES = {
     "m11": m11_ship,
     "m12": m12_breach,
     "m13": m13_chart,
+    "m14": m14_cairo,
+    "m15": m15_sandringham,
 }
 
 

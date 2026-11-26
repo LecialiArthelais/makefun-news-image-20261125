@@ -30,32 +30,36 @@ ROBINSON = "ESRI:54030"
 # (label, lat, lon, dx_pt, dy_pt) — dx/dy move the number chip off the dot
 # when pins crowd each other; (0, 0) means the number sits on the dot.
 PINS = [
-    ("1", 40.96, 100.30, 0, 0),        # Jiuquan
-    ("2·3", -35.28, 149.13, -16, 0),     # Canberra (CPI + treaty)
-    ("4", 24.71, 46.68, 0, 0),         # Riyadh
-    ("5·13", 40.71, -74.01, -18, 10),    # New York (Huawei + Nvidia)
-    ("6", -39.85, 147.98, 0, 0),       # Flinders Island
-    ("7", 37.57, 126.98, -20, 6),      # Seoul
-    ("8", 37.48, 130.87, 20, -6),      # Ulleung
-    ("9", 33.31, 44.36, 0, 0),         # Baghdad
-    ("10", 26.57, 56.25, 0, 0),        # Strait of Hormuz
-    ("11", 59.80, 24.50, 0, 0),        # Gulf of Finland
-    ("12+", 38.91, -77.04, 20, -16),   # Washington (12, 17, 23, 24)
-    ("14·30", 35.68, 139.69, 14, -12),    # Tokyo (Seki + Nikkei)
-    ("15·34", 50.85, 4.35, -8, 16),   # Brussels (summit + budget)
-    ("16", 26.71, -80.04, 18, -16),    # Palm Beach
-    ("18", 46.20, 6.14, 16, -14),       # Geneva
-    ("20", 40.42, -3.70, -14, -16),    # Madrid
-    ("21", 10.39, -75.51, -16, 0),       # Cartagena
-    ("22", 45.42, -75.70, 18, 12),     # Ottawa (Kutryk / ISS)
-    ("25", 48.86, 2.35, -24, -4),        # Paris
-    ("26", 31.13, -97.78, 0, 0),       # Fort Hood, Texas
-    ("27", 4.15, -73.64, 16, -6),        # Villavicencio
-    ("28", -28.01, 153.40, 0, 0),      # Carrara, Gold Coast
-    ("29", 28.61, 77.21, 0, 0),        # New Delhi
-    ("31", 48.58, 7.75, 22, 4),        # Strasbourg
-    ("32", 14.80, 42.95, -16, 2),        # Hodeidah
-    ("33", 12.79, 45.04, 16, -10),        # Aden
+    ("1·12+", 38.91, -77.04, 26, -20),  # Washington (1 US data, 12 CIA, 24 turkey, 25 Giuliani)
+    ("2", 40.96, 100.30, 0, 0),         # Jiuquan
+    ("3", -35.28, 149.13, -16, 0),       # Canberra (Solomons treaty)
+    ("4", 24.71, 46.68, 0, 0),          # Riyadh
+    ("5·13", 40.71, -74.01, -22, 12),    # New York (Huawei + markets)
+    ("6", -39.85, 147.98, 0, 0),        # Flinders Island
+    ("7", 37.57, 126.98, -24, 8),       # Seoul
+    ("8", 37.48, 130.87, 24, -8),       # Ulleung
+    ("9", 33.31, 44.36, 0, 0),          # Baghdad
+    ("10", 26.57, 56.25, 0, 0),         # Strait of Hormuz
+    ("11", 59.80, 24.50, 0, 0),         # Gulf of Finland
+    ("14", 30.06, 31.25, 0, 0),         # Cairo
+    ("15", 52.83, 0.51, -22, -16),      # Sandringham, Norfolk
+    ("16·31", 35.68, 139.69, 18, -14),   # Tokyo (Seki + Nikkei)
+    ("17·35", 50.85, 4.35, -10, 20),     # Brussels (summit + budget)
+    ("18", 26.71, -80.04, 22, -18),     # Palm Beach
+    ("19", 46.20, 6.14, 26, -20),       # Geneva
+    ("21", 40.42, -3.70, -18, -20),     # Madrid
+    ("22", 10.39, -75.51, -16, 0),      # Cartagena
+    ("23", 45.42, -75.70, 22, 14),      # Ottawa (Kutryk / ISS)
+    ("26", 48.86, 2.35, -34, -8),       # Paris
+    ("27", 31.13, -97.78, 0, 0),        # Fort Hood, Texas
+    ("28", 4.15, -73.64, 16, -6),       # Villavicencio
+    ("29", -28.01, 153.40, 0, 0),       # Carrara, Gold Coast
+    ("30", 28.61, 77.21, 0, 0),         # New Delhi
+    ("32", 48.58, 7.75, 32, 8),         # Strasbourg
+    ("33", 14.80, 42.95, -16, 2),       # Hodeidah
+    ("34", 12.79, 45.04, 16, -10),      # Aden
+    ("36", 31.77, 35.21, -20, 16),      # Jerusalem
+    ("37", 27.35, 87.65, 0, 0),         # Taplejung, Nepal
 ]
 
 
@@ -75,22 +79,21 @@ def render(pins, out_path, width_px=470, height_px=185):
     ).to_crs(ROBINSON)
     for (label, _lat, _lon, dx, dy), geom in zip(pins, pts.geometry):
         x, y = geom.x, geom.y
-        # On-dot labels must fit INSIDE the disc: 1 char -> r 400 km,
-        # 2 chars -> r 500 km (white text on light land is invisible
-        # outside the disc). Longer labels always use offset chips.
-        radius = 500000 if len(label) == 2 else 400000
-        ax.add_patch(Circle((x, y), radius, facecolor="#DC2626",
-                            edgecolor="#FFFFFF", linewidth=1.0, zorder=5))
+        # v2: pins bigger (v1 pins unreadable at 512px). On-dot labels must
+        # fit INSIDE the disc: 1 char -> r 550 km, 2 chars -> r 650 km.
+        radius = 550000 if len(label) == 2 else 450000
+        ax.add_patch(Circle((x, y), radius, facecolor="#1E40AF",
+                            edgecolor="#FFFFFF", linewidth=1.2, zorder=5))
         if dx == 0 and dy == 0:
-            ax.text(x, y, label, ha="center", va="center", fontsize=6,
+            ax.text(x, y, label, ha="center", va="center", fontsize=7,
                     color="#FFFFFF", fontweight="bold", zorder=6)
         else:
             ax.annotate(label, xy=(x, y), xytext=(dx, dy),
                         textcoords="offset points", ha="center", va="center",
-                        fontsize=6.5, color="#FFFFFF", fontweight="bold",
-                        bbox=dict(boxstyle="round,pad=0.22,rounding_size=1.2", facecolor="#DC2626",
+                        fontsize=7.5, color="#FFFFFF", fontweight="bold",
+                        bbox=dict(boxstyle="round,pad=0.22,rounding_size=1.2", facecolor="#1E40AF",
                                   edgecolor="#FFFFFF", linewidth=0.8),
-                        arrowprops=dict(arrowstyle="-", color="#DC2626",
+                        arrowprops=dict(arrowstyle="-", color="#1E40AF",
                                         linewidth=0.8, shrinkA=2, shrinkB=1),
                         zorder=6)
     fig.savefig(out_path, dpi=100)
